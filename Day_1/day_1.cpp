@@ -14,7 +14,7 @@ vector<int> get_inputs(string file_path)
     vector<int> output;
     string value;
     ifstream InFile(file_path);
-    int i = 0;
+
     while(InFile)
     {
         // don't read last line twice
