@@ -4,12 +4,16 @@
 
 using namespace std;
 
-// Count the number of times a depth measurement increases
-vector<int> get_inputs()
+vector<int> get_inputs(string file_path);
+vector<int> sliding_window(const vector<int> input);
+int get_num_increases(const vector<int> input);
+
+// Convert inputs into a vector
+vector<int> get_inputs(string file_path)
 {
     vector<int> output;
     string value;
-    ifstream InFile("day_1_input.txt");
+    ifstream InFile(file_path);
     int i = 0;
     while(InFile)
     {
@@ -25,6 +29,7 @@ vector<int> get_inputs()
     return output;
 }
 
+// Count the number of times a depth measurement increases
 int get_num_increases(const vector<int> input)
 {
     int output = 0;
@@ -49,7 +54,7 @@ vector<int> sliding_window(const vector<int> input)
 
 int main()
 {
-    const vector<int> input = get_inputs();
+    const vector<int> input = get_inputs("day_1_input.txt");
     int num_increases = get_num_increases(input);
 
     // Part 1 answer
