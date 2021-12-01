@@ -15,11 +15,8 @@ vector<int> get_inputs(string file_path)
     string value;
     ifstream InFile(file_path);
 
-    while(InFile)
+    while(!InFile.eof())
     {
-        // don't read last line twice
-        if(InFile.eof()) break;
-
         getline(InFile, value);
         output.push_back(stoi(value));
     }
