@@ -65,14 +65,11 @@ bingo_board parse_bingo_board(vector<string> board)
             else
             {
                 output.elements[i][k].value = stoi(buff);
-                cout << output.elements[i][j].value;
                 buff = "";
-                cout << " ";
                 k++;
             }
         }
         k = 0;
-        cout << "\n";
     }
 
 
@@ -151,22 +148,18 @@ void print_all_boards(vector<bingo_board> &boards)
     }
 }
 
-void calculate_score_hz(bingo_board &board, int itr)
+int calculate_score(bingo_board &board, int itr)
 {
-    int score = 0;
-    for(int i = 0; i < BOARD_HEIGHT; i++)
-        score += board.elements[itr][i].value;
+    int sum = 0;
+    for (int i = 0; i < BOARD_HEIGHT; i++)
+    {
+        for(int j = 0; j < BOARD_LENGTH; j++)
+        {
+            sum += (board.elements[i][j].selected) ? 0 : board.elements[i][j].value;
+        }
+    }
 
-    board.score = score;
-}
-
-void calculate_score_vt(bingo_board &board, int itr)
-{
-    int score = 0;
-    for(int i = 0; i < BOARD_HEIGHT; i++)
-        score += board.elements[i][itr].value;
-
-    board.score = score;
+    return sum*itr;
 }
 
 bool check_horizontal(bingo_board &board, int itr)
@@ -177,7 +170,6 @@ bool check_horizontal(bingo_board &board, int itr)
             return false;
     }
 
-    calculate_score_hz(board, itr);
     return true;    
 }
 
@@ -189,7 +181,6 @@ bool check_vertical(bingo_board &board, int itr)
             return false;
     }
 
-    calculate_score_vt(board, itr);
     return true;    
 }
 
@@ -203,7 +194,6 @@ bool check_for_winner(bingo_board &board)
         if( check_vertical(board, i) )
         {
             board.won = true;
-            cout << "Board score = " << board.score << endl;
             return true;
         }
     }
@@ -213,7 +203,6 @@ bool check_for_winner(bingo_board &board)
         if( check_horizontal(board, i) )
         {
             board.won = true;
-            cout << "Board score = " << board.score << endl;
             return true;
         }
     }
@@ -225,13 +214,12 @@ bool check_for_winner(bingo_board &board)
 int draw_numbers(vector<unsigned int> &calls, vector<bingo_board> &boards)
 {
     unsigned int number;
+    unsigned int score;
 
     // Mark each board and check for winners
     for(int i = 0; i < calls.size(); i++)
     {
         number = calls[i];
-
-        cout << calls[i] << " ";
 
         for(int j = 0; j < boards.size(); j++)
         {
@@ -239,10 +227,9 @@ int draw_numbers(vector<unsigned int> &calls, vector<bingo_board> &boards)
 
             if( check_for_winner(boards[j]) )
             {
-                cout << "Call = " << number << endl;
-                print_all_boards(boards);
-                boards[j].score *= number;
-                cout << boards[j].score << endl;
+                score = calculate_score(boards[j], number);
+                
+                cout << "Score = " << score << endl;
                 return 1;
             }
         }
@@ -256,20 +243,7 @@ int main()
     vector<unsigned int> calls;
     vector<bingo_board> boards;
 
-    parse_inputs("test_input.txt", calls, boards);
-
-    // for(int i = 0; i < boards.size(); i++)
-    // {
-    //     for(int j = 0; j < BOARD_HEIGHT; j++)
-    //     {
-    //         for(int k = 0; k < BOARD_LENGTH; k++)
-    //         {
-    //             cout << boards[i].elements[j][k].value << " ";
-    //         }
-    //         cout << "\n";
-    //     }
-    //     cout << '\n';
-    // }
+    parse_inputs("day_4_input.txt", calls, boards);
 
     draw_numbers(calls, boards);
 
