@@ -229,7 +229,7 @@ int find_first_winner(vector<unsigned int> &calls, vector<bingo_board> &boards)
             {
                 score = calculate_score(boards[j], number);
                 
-                cout << "Score = " << score << endl;
+                cout << "Score of first winning board = " << score << endl;
                 return 1;
             }
         }
@@ -238,7 +238,25 @@ int find_first_winner(vector<unsigned int> &calls, vector<bingo_board> &boards)
     return 0;
 }
 
-int find_last_winnter(vector<unsigned int> &calls, vector<bingo_board> &boards)
+void unmark_board(bingo_board *board)
+{
+    for(int i = 0; i < BOARD_HEIGHT; i++)
+    {
+        for(int j = 0; j < BOARD_LENGTH; j++)
+        {
+            (*board).elements[i][j].selected = false;
+            (*board).won = false;
+        }
+    }
+}
+
+void unmark_boards(vector<bingo_board> *boards)
+{
+    for(int i = 0; i < (*boards).size(); i++)
+        unmark_board(&(*boards)[i]);
+}
+
+int find_last_winner(vector<unsigned int> &calls, vector<bingo_board> &boards)
 {
     unsigned int number;
     unsigned int score;
@@ -252,15 +270,15 @@ int find_last_winnter(vector<unsigned int> &calls, vector<bingo_board> &boards)
         {
             mark_board(boards[j], number);
 
-            if( check_for_winner(boards[j]) )
+            if( boards[j].won == false )
             {
-                num_winners++;
+                num_winners += check_for_winner(boards[j]);
             }
 
             if(num_winners == boards.size())
             {
                 score = calculate_score(boards[j], number);
-                cout << "Score pt2 = " << score << endl;
+                cout << "Score of last winning board = " << score << endl;
                 return 1;
             }
         }
@@ -278,7 +296,8 @@ int main()
     parse_inputs("day_4_input.txt", calls, boards);
 
     find_first_winner(calls, boards);
-    find_last_winnter(calls, boards);
+    unmark_boards(&boards);
+    find_last_winner(calls, boards);
 
     return 0;
 }
