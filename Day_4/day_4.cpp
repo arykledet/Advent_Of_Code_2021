@@ -211,7 +211,7 @@ bool check_for_winner(bingo_board &board)
 }
 
 // Draw all the numbers and check for winners
-int draw_numbers(vector<unsigned int> &calls, vector<bingo_board> &boards)
+int find_first_winner(vector<unsigned int> &calls, vector<bingo_board> &boards)
 {
     unsigned int number;
     unsigned int score;
@@ -238,6 +238,38 @@ int draw_numbers(vector<unsigned int> &calls, vector<bingo_board> &boards)
     return 0;
 }
 
+int find_last_winnter(vector<unsigned int> &calls, vector<bingo_board> &boards)
+{
+    unsigned int number;
+    unsigned int score;
+    unsigned int num_winners = 0;
+
+    for(int i = 0; i < calls.size(); i++)
+    {
+        number = calls[i];
+
+        for(int j = 0; j < boards.size(); j++)
+        {
+            mark_board(boards[j], number);
+
+            if( check_for_winner(boards[j]) )
+            {
+                num_winners++;
+            }
+
+            if(num_winners == boards.size())
+            {
+                score = calculate_score(boards[j], number);
+                cout << "Score pt2 = " << score << endl;
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+
+}
+
 int main()
 {
     vector<unsigned int> calls;
@@ -245,7 +277,8 @@ int main()
 
     parse_inputs("day_4_input.txt", calls, boards);
 
-    draw_numbers(calls, boards);
+    find_first_winner(calls, boards);
+    find_last_winnter(calls, boards);
 
     return 0;
 }
